@@ -1,9 +1,10 @@
 //
 //  HydroViewModel.swift
+//
 import Foundation
 import CoreLocation
 import Combine
-
+import SwiftUI
 
 @MainActor
 final class HydroViewModel: ObservableObject {
@@ -16,6 +17,11 @@ final class HydroViewModel: ObservableObject {
     
     @Published var exerciseBoostActive: Bool = false
     @Published var weatherBoostActive: Bool = false
+    
+    // MARK: - Hydration feedback
+    @Published var hydrationMessage: String = "—"
+    @Published var hydrationEmoji: String = "🌤"
+    @Published var hydrationColor: Color = .blue
     
     func onAppear() {
         Task {
@@ -33,7 +39,20 @@ final class HydroViewModel: ObservableObject {
         reschedule()
     }
     
+    /// Fetches live weather if possible, or provides fake simulator data for debugging.
     func refreshWeatherIfPossible() async {
+        #if targetEnvironment(simulator)
+        // 🧪 DEBUG: Provide fake simulator data for UI testing
+        self.city = "Simulator City"
+        self.country = "Debugland"
+        self.tempC = Double.random(in: 22...31)
+        self.humidity = Int.random(in: 45...75)
+        self.lastUpdated = Date()
+        evaluateHydrationNeed()
+        print("🧪 Using fake weather: \(String(format: "%.1f", tempC))°C, \(humidity)% humidity")
+        reschedule()
+        return
+        #else
         guard let loc = LocationManager.shared.location else { return }
         do {
             let snap = try await WeatherManager.shared.fetchSnapshot(for: loc)
@@ -42,9 +61,32 @@ final class HydroViewModel: ObservableObject {
             tempC = snap.temperatureC
             humidity = snap.humidityPct
             lastUpdated = snap.asOf
-            weatherBoostActive = (tempC >= 26) || (humidity >= 65)
+            evaluateHydrationNeed()
             reschedule()
-        } catch { }
+        } catch {
+            print("⚠️ Weather fetch failed: \(error)")
+        }
+        #endif
+    }
+    
+    /// Evaluates hydration need and sets emoji, color, and user message.
+    private func evaluateHydrationNeed() {
+        if tempC > 26 {
+            weatherBoostActive = true
+            hydrationEmoji = "☀️"
+            hydrationColor = .red
+            hydrationMessage = "It’s hot outside — drink extra water to stay cool."
+        } else if tempC > 20 && humidity > 60 {
+            weatherBoostActive = true
+            hydrationEmoji = "💦"
+            hydrationColor = .orange
+            hydrationMessage = "It feels warm and humid — take a few sips to stay hydrated."
+        } else {
+            weatherBoostActive = false
+            hydrationEmoji = "🌤"
+            hydrationColor = .blue
+            hydrationMessage = "Normal conditions — your regular water routine is fine."
+        }
     }
     
     private func observeExercise() {
@@ -76,3 +118,4 @@ final class HydroViewModel: ObservableObject {
         NotificationScheduler.scheduleDaily(plan: plan)
     }
 }
+
