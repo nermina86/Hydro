@@ -70,7 +70,6 @@ struct SettingsView: View {
 }
 
 #Preview {
-    // Preview with a mock view model
     SettingsView(vm: HydroViewModel())
 }
 

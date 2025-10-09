@@ -19,7 +19,7 @@ final class HydroViewModel: ObservableObject {
     
     func onAppear() {
         Task {
-            await LocationManager.shared.request()
+            LocationManager.shared.request()
             try? await HealthManager.shared.requestAuthorization()
             _ = await NotificationScheduler.requestAuth()
             await refreshWeatherIfPossible()
