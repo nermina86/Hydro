@@ -14,32 +14,36 @@ struct SettingsView: View {
             // MARK: - Reminders per day
             Section {
                 HStack(spacing: 22) {
-                    Button(action: {
-                        if vm.reminderCountPerDay > 1 {
-                            vm.setReminders(vm.reminderCountPerDay - 1)
-                            WKInterfaceDevice.current().play(.click)
+                    Button {
+                        Task { @MainActor in
+                            if vm.reminderCountPerDay > 1 {
+                                vm.setReminders(vm.reminderCountPerDay - 1)
+                                WKInterfaceDevice.current().play(.click)
+                            }
                         }
-                    }) {
+                    } label: {
                         Image(systemName: "minus.circle.fill")
                             .font(.system(size: 32, weight: .semibold))
+                            .foregroundColor(.gray)
                     }
-                    .tint(.gray)
 
                     Text("\(vm.reminderCountPerDay)× / day")
                         .font(.system(size: 20, weight: .semibold))
                         .frame(minWidth: 80)
                         .animation(.easeInOut, value: vm.reminderCountPerDay)
 
-                    Button(action: {
-                        if vm.reminderCountPerDay < 12 {
-                            vm.setReminders(vm.reminderCountPerDay + 1)
-                            WKInterfaceDevice.current().play(.click)
+                    Button {
+                        Task { @MainActor in
+                            if vm.reminderCountPerDay < 12 {
+                                vm.setReminders(vm.reminderCountPerDay + 1)
+                                WKInterfaceDevice.current().play(.click)
+                            }
                         }
-                    }) {
+                    } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.system(size: 32, weight: .semibold))
+                            .foregroundColor(.green)
                     }
-                    .tint(.green)
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 6)

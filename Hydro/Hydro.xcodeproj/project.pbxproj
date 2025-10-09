@@ -327,6 +327,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Hydro Watch App/Hydro Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F94S465KR5;
@@ -334,6 +335,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Hydro Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Hydro;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hydro uses your heart rate and workouts to adjust hydration reminders based on your activity.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hydro may use your heart rate and workouts to adapt hydration goals.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hydro uses your location to show humidity and temperature where you are.";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "location-services healthkit";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -361,6 +367,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Hydro Watch App/Hydro Watch App.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = F94S465KR5;
@@ -368,6 +375,11 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Hydro Watch App/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Hydro;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Hydro uses your heart rate and workouts to adjust hydration reminders based on your activity.";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Hydro may use your heart rate and workouts to adapt hydration goals.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Hydro uses your location to show humidity and temperature where you are.";
+				INFOPLIST_KEY_UIRequiredDeviceCapabilities = "location-services healthkit";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (

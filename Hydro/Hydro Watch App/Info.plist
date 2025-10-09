@@ -1,76 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
-    "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-
-    <!-- App Info -->
-    <key>CFBundleName</key>
-    <string>Hydro</string>
-    <key>CFBundleDisplayName</key>
-    <string>Hydro</string>
-    <key>CFBundleIdentifier</key>
-    <string>com.hydro.app</string>
-    <key>CFBundleExecutable</key>
-    <string>$(EXECUTABLE_NAME)</string>
-    <key>CFBundlePackageType</key>
-    <string>APPL</string>
-    <key>CFBundleShortVersionString</key>
-    <string>1.0</string>
-    <key>CFBundleVersion</key>
-    <string>1</string>
-    <key>MinimumOSVersion</key>
-    <string>10.0</string>
-
-    <!-- Watch-only -->
-    <key>UIDeviceFamily</key>
-    <array>
-        <integer>4</integer>
-    </array>
-
-    <!-- App Icon -->
-    <key>CFBundleIcons</key>
-    <dict>
-        <key>CFBundlePrimaryIcon</key>
-        <dict>
-            <key>CFBundleIconFiles</key>
-            <array>
-                <string>AppIcon</string>
-            </array>
-        </dict>
-    </dict>
-
-    <!-- Privacy / Permissions -->
-    <key>NSHealthShareUsageDescription</key>
-    <string>Hydro uses your heart rate and workouts to adjust hydration reminders based on your activity.</string>
-
-    <key>NSHealthUpdateUsageDescription</key>
-    <string>Hydro may use your heart rate and workouts to adapt hydration goals.</string>
-
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>Hydro uses your location to show humidity and temperature where you are.</string>
-
-    <key>NSWeatherKitUsageDescription</key>
-    <string>Hydro fetches local weather to tailor your hydration reminders.</string>
-
-    <key>UNUserNotificationCenterUsageDescription</key>
-    <string>Hydro uses notifications to remind you to drink water.</string>
-
-    <!-- Capabilities -->
-    <key>UIRequiredDeviceCapabilities</key>
-    <array>
-        <string>location-services</string>
-        <string>healthkit</string>
-    </array>
-
-    <key>UIBackgroundModes</key>
-    <array>
-        <string>fetch</string>
-    </array>
-
-    <!-- App Category -->
-    <key>LSApplicationCategoryType</key>
-    <string>public.app-category.healthcare-fitness</string>
-
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>AppIcon</string>
+			</array>
+		</dict>
+	</dict>
+	<key>MinimumOSVersion</key>
+	<string>10.0</string>
+	<key>NSWeatherKitUsageDescription</key>
+	<string>Hydro fetches local weather to tailor your hydration reminders.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>fetch</string>
+	</array>
+	<key>UIDeviceFamily</key>
+	<array>
+		<integer>4</integer>
+	</array>
+	<key>UNUserNotificationCenterUsageDescription</key>
+	<string>Hydro uses notifications to remind you to drink water.</string>
 </dict>
 </plist>
