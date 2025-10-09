@@ -37,7 +37,7 @@ struct SettingsView: View {
 
             // MARK: - Info Section
             Section {
-                Text("We’ll auto-add one extra reminder when it’s hot, humid, or you’re exercising.")
+                Text("We’ll add extra reminder to drink water when it’s hot, or you exercise.")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
