@@ -3,16 +3,18 @@
 //  Hydro Watch App
 //
 
+// HydroApp.swift
+
 import SwiftUI
 
 @main
 struct HydroApp: App {
-    @StateObject private var vm = HydroViewModel() // shared view model for the entire app
+    @StateObject private var vm = HydroViewModel()
 
     var body: some Scene {
         WindowGroup {
             NavigationStack {
-                DashboardView(vm: vm) // pass the same instance
+                DashboardView(vm: vm)
             }
         }
     }
