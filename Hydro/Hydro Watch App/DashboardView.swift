@@ -1,5 +1,6 @@
 //
 //  DashboardView.swift
+//
 
 import SwiftUI
 
@@ -19,12 +20,26 @@ struct DashboardView: View {
                 stat("Humidity", value: "\(vm.humidity)%")
             }
 
+            // 💧 Hydration feedback (emoji, color & message)
+            if !vm.hydrationMessage.isEmpty && vm.hydrationMessage != "—" {
+                Text("\(vm.hydrationEmoji) \(vm.hydrationMessage)")
+                    .foregroundColor(vm.hydrationColor)
+                    .font(.footnote)
+                    .multilineTextAlignment(.center)
+                    .padding(.top, 2)
+                    .transition(.opacity)
+                    .id(vm.hydrationMessage) // ensures view updates when text changes
+            }
+
+            // 💦 Optional: Show simple reminder badge when extra boosts active
             if vm.weatherBoostActive || vm.exerciseBoostActive {
                 Label("Extra reminders active", systemImage: "drop.fill")
                     .font(.caption2)
                     .foregroundStyle(.blue)
+                    .padding(.top, 2)
             }
 
+            // 🔄 Update button
             Button {
                 Task { await vm.refreshWeatherIfPossible() }
             } label: {
@@ -33,7 +48,7 @@ struct DashboardView: View {
             .buttonStyle(.bordered)
             .font(.caption)
 
-            // ✅ Pass same vm to Settings
+            // ⚙️ Settings navigation
             NavigationLink("Settings") {
                 SettingsView(vm: vm)
             }
@@ -43,6 +58,8 @@ struct DashboardView: View {
         .onAppear {
             vm.onAppear()
         }
+        // Smoothly animate hydration message changes
+        .animation(.easeInOut(duration: 0.4), value: vm.hydrationMessage)
     }
 
     func stat(_ title: String, value: String) -> some View {
