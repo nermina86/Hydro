@@ -11,15 +11,20 @@ struct DashboardView: View {
         // Use ScrollView so long text never clips
         ScrollView {
             VStack(spacing: 8) {
-                Text("Hydro")
+                Text("Hydro: \(vm.city)")
                     .font(.headline)
-
-                Text("\(vm.city), \(vm.country)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
+                    .foregroundStyle(.secondary)
+                
+                 
+                // Text(vm.city) //Text("\(vm.city), \(vm.country)")
+                 //   .font(.caption)
+                 //   .foregroundStyle(.secondary)
+                //    .multilineTextAlignment(.center)
+                  //  .lineLimit(1)
+                  //  .minimumScaleFactor(0.8)
 
                 HStack {
                     stat("Temp", value: vm.tempC.isNaN ? "—" : String(format: "%.0f℃", vm.tempC))

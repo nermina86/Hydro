@@ -9,7 +9,7 @@ import SwiftUI
 @MainActor
 final class HydroViewModel: ObservableObject {
     @Published var city: String = "—"
-    @Published var country: String = "—"
+  //  @Published var country: String = "—"
     @Published var tempC: Double = .nan
     @Published var humidity: Int = 0
     @Published var lastUpdated: Date?
@@ -57,7 +57,7 @@ final class HydroViewModel: ObservableObject {
         do {
             let snap = try await WeatherManager.shared.fetchSnapshot(for: loc)
             city = snap.city
-            country = snap.country
+          //country = snap.country
             tempC = snap.temperatureC
             humidity = snap.humidityPct
             lastUpdated = snap.asOf
