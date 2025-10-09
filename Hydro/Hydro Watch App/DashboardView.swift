@@ -8,58 +8,68 @@ struct DashboardView: View {
     @ObservedObject var vm: HydroViewModel
 
     var body: some View {
-        VStack(spacing: 8) {
-            Text("Hydro")
-                .font(.headline)
-            Text("\(vm.city), \(vm.country)")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+        // Use ScrollView so long text never clips
+        ScrollView {
+            VStack(spacing: 8) {
+                Text("Hydro")
+                    .font(.headline)
 
-            HStack {
-                stat("Temp", value: vm.tempC.isNaN ? "—" : String(format: "%.0f℃", vm.tempC))
-                stat("Humidity", value: "\(vm.humidity)%")
-            }
-
-            // 💧 Hydration feedback (emoji, color & message)
-            if !vm.hydrationMessage.isEmpty && vm.hydrationMessage != "—" {
-                Text("\(vm.hydrationEmoji) \(vm.hydrationMessage)")
-                    .foregroundColor(vm.hydrationColor)
-                    .font(.footnote)
+                Text("\(vm.city), \(vm.country)")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
                     .multilineTextAlignment(.center)
-                    .padding(.top, 2)
-                    .transition(.opacity)
-                    .id(vm.hydrationMessage) // ensures view updates when text changes
-            }
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.8)
 
-            // 💦 Optional: Show simple reminder badge when extra boosts active
-            if vm.weatherBoostActive || vm.exerciseBoostActive {
-                Label("Extra reminders active", systemImage: "drop.fill")
-                    .font(.caption2)
-                    .foregroundStyle(.blue)
-                    .padding(.top, 2)
-            }
+                HStack {
+                    stat("Temp", value: vm.tempC.isNaN ? "—" : String(format: "%.0f℃", vm.tempC))
+                    stat("Humidity", value: "\(vm.humidity)%")
+                }
 
-            // 🔄 Update button
-            Button {
-                Task { await vm.refreshWeatherIfPossible() }
-            } label: {
-                Label("Update now", systemImage: "arrow.clockwise")
-            }
-            .buttonStyle(.bordered)
-            .font(.caption)
+                // 💧 Hydration feedback (emoji + text + color)
+                if !vm.hydrationMessage.isEmpty && vm.hydrationMessage != "—" {
+                    Text("\(vm.hydrationEmoji) \(vm.hydrationMessage)")
+                        .foregroundColor(vm.hydrationColor)
+                        .font(.footnote)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .lineLimit(nil)
+                        .minimumScaleFactor(0.8)
+                        .padding(.horizontal, 8)
+                        .transition(.opacity)
+                        .id(vm.hydrationMessage)
+                }
 
-            // ⚙️ Settings navigation
-            NavigationLink("Settings") {
-                SettingsView(vm: vm)
+                // 💦 Optional status label
+                if vm.weatherBoostActive || vm.exerciseBoostActive {
+                    Label("Extra reminders active", systemImage: "drop.fill")
+                        .font(.caption2)
+                        .foregroundStyle(.blue)
+                        .padding(.top, 2)
+                }
+
+                // 🔄 Update button
+                Button {
+                    Task { await vm.refreshWeatherIfPossible() }
+                } label: {
+                    Label("Update now", systemImage: "arrow.clockwise")
+                }
+                .buttonStyle(.bordered)
+                .font(.caption)
+
+                // ⚙️ Settings navigation
+                NavigationLink("Settings") {
+                    SettingsView(vm: vm)
+                }
+                .font(.caption)
             }
-            .font(.caption)
+            .padding()
+            .frame(maxWidth: .infinity)
         }
-        .padding()
         .onAppear {
             vm.onAppear()
         }
-        // Smoothly animate hydration message changes
-        .animation(.easeInOut(duration: 0.4), value: vm.hydrationMessage)
+        .animation(.easeInOut(duration: 0.3), value: vm.hydrationMessage)
     }
 
     func stat(_ title: String, value: String) -> some View {
@@ -77,3 +87,4 @@ struct DashboardView: View {
 #Preview {
     DashboardView(vm: HydroViewModel())
 }
+

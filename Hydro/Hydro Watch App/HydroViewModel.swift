@@ -43,8 +43,8 @@ final class HydroViewModel: ObservableObject {
     func refreshWeatherIfPossible() async {
         #if targetEnvironment(simulator)
         // 🧪 DEBUG: Provide fake simulator data for UI testing
-        self.city = "Simulator City"
-        self.country = "Debugland"
+        self.city = "Sarajevo"
+      //  self.country = "Bosnia"
         self.tempC = Double.random(in: 22...31)
         self.humidity = Int.random(in: 45...75)
         self.lastUpdated = Date()
