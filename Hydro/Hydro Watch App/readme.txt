@@ -23,3 +23,10 @@ Hydro/
 ├── Hydro.xcodeproj/                     → Xcode project definition
 │
 └── README.txt                           → Documentation
+
+
+ Quick Hydration Coach
+* Shows your current water intake progress on the watch face complication.
+* Uses weather + heart rate + step count to suggest how much you need today (instead of generic “2 liters”).
+* Sends gentle haptics if you’re behind on hydration goals.
+* Why missing: Water reminder apps exist, but none adapt goals to your actual day’s activity, hearth rate + climate.

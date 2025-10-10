@@ -71,6 +71,10 @@ final class HydroViewModel: ObservableObject {
     
     /// Evaluates hydration need and sets emoji, color, and user message.
     private func evaluateHydrationNeed() {
+        // Capture the previous state before updating
+        let previousBoost = weatherBoostActive
+
+        // --- Evaluate new conditions ---
         if tempC > 26 {
             weatherBoostActive = true
             hydrationEmoji = "☀️"
@@ -87,8 +91,12 @@ final class HydroViewModel: ObservableObject {
             hydrationColor = .blue
             hydrationMessage = "Normal conditions — your regular water routine is fine."
         }
+
+        // --- Trigger haptic only when boost just became active ---
+        if weatherBoostActive && !previousBoost {
+            HapticManager.play(.hydrationReminder)
+        }
     }
-    
     private func observeExercise() {
         // Tie boosts to HealthManager publishers
         Task.detached { [weak self] in
