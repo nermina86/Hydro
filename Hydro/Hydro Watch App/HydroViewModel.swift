@@ -84,7 +84,7 @@ final class HydroViewModel: ObservableObject {
             weatherBoostActive = true
             hydrationEmoji = "💦"
             hydrationColor = .orange
-            hydrationMessage = "It feels warm and humid — take a few sips to stay hydrated."
+            hydrationMessage = "It feels warm and humid — take a few sips of water."
         } else {
             weatherBoostActive = false
             hydrationEmoji = "🌤"
