@@ -104,19 +104,19 @@ final class HydroViewModel: ObservableObject {
             emoji = "☀️"
             color = .red
             message = "It’s hot outside — drink extra water to stay cool."
-        } else if tempC > 20 && humidity > 60 {
+        } else if tempC > 24 && humidity > 60 {
             emoji = "💦"
             color = .orange
             message = "It feels warm and humid — take a few sips of water."
         } else {
             emoji = "🌤"
             color = .blue
-            message = "Normal conditions — your regular water routine is fine."
+            message = "Normal conditions — regular water routine is advised."
         }
 
         // --- Exercise overlay ---
         if exerciseBoostActive {
-            message += " Because of your recent activity, aim for about 300 ml more water than your usual daily amount."
+            message += "Because of your recent exercise activity, aim for 300ml additional water."
         }
 
         hydrationEmoji = emoji
