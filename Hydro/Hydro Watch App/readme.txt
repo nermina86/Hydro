@@ -1,6 +1,6 @@
-Hydro/
+Hydration/
 │
-├── Hydro Watch App/
+├── Hydration Watch App/
 │   ├── DashboardView.swift              → Displays current weather, humidity, and hydration status
 │   ├── SettingsView.swift               → Lets user set number of daily reminders
 │   ├── HydroViewModel.swift             → Core logic for weather, hydration, reminders
