@@ -9,7 +9,7 @@ import SwiftUI
 @MainActor
 final class HydroViewModel: ObservableObject {
     @Published var city: String = "—"
-  //  @Published var country: String = "—"
+    //  @Published var country: String = "—"
     @Published var tempC: Double = .nan
     @Published var humidity: Int = 0
     @Published var lastUpdated: Date?
@@ -44,7 +44,7 @@ final class HydroViewModel: ObservableObject {
         #if targetEnvironment(simulator)
         // 🧪 DEBUG: Provide fake simulator data for UI testing
         self.city = "Sarajevo"
-      //  self.country = "Bosnia"
+        //  self.country = "Bosnia"
         self.tempC = Double.random(in: 22...31)
         self.humidity = Int.random(in: 45...75)
         self.lastUpdated = Date()
@@ -57,7 +57,7 @@ final class HydroViewModel: ObservableObject {
         do {
             let snap = try await WeatherManager.shared.fetchSnapshot(for: loc)
             city = snap.city
-          //country = snap.country
+            //country = snap.country
             tempC = snap.temperatureC
             humidity = snap.humidityPct
             lastUpdated = snap.asOf
@@ -69,34 +69,61 @@ final class HydroViewModel: ObservableObject {
         #endif
     }
     
-    /// Evaluates hydration need and sets emoji, color, and user message.
+    /// Evaluates hydration need based on weather and updates boost flag + haptic.
+    /// Actual message/emoji/color are built in `recomputeHydrationMessage()`.
     private func evaluateHydrationNeed() {
         // Capture the previous state before updating
         let previousBoost = weatherBoostActive
 
-        // --- Evaluate new conditions ---
+        // --- Evaluate weather-based conditions only ---
         if tempC > 26 {
             weatherBoostActive = true
-            hydrationEmoji = "☀️"
-            hydrationColor = .red
-            hydrationMessage = "It’s hot outside — drink extra water to stay cool."
         } else if tempC > 20 && humidity > 60 {
             weatherBoostActive = true
-            hydrationEmoji = "💦"
-            hydrationColor = .orange
-            hydrationMessage = "It feels warm and humid — take a few sips of water."
         } else {
             weatherBoostActive = false
-            hydrationEmoji = "🌤"
-            hydrationColor = .blue
-            hydrationMessage = "Normal conditions — your regular water routine is fine."
         }
+
+        // Build full message (weather + exercise)
+        recomputeHydrationMessage()
 
         // --- Trigger haptic only when boost just became active ---
         if weatherBoostActive && !previousBoost {
             HapticManager.play(.hydrationReminder)
         }
     }
+
+    /// Builds the hydration message and visuals based on weather + exercise.
+    private func recomputeHydrationMessage() {
+        var message: String
+        var emoji: String
+        var color: Color
+
+        // --- Weather baseline ---
+        if tempC > 26 {
+            emoji = "☀️"
+            color = .red
+            message = "It’s hot outside — drink extra water to stay cool."
+        } else if tempC > 20 && humidity > 60 {
+            emoji = "💦"
+            color = .orange
+            message = "It feels warm and humid — take a few sips of water."
+        } else {
+            emoji = "🌤"
+            color = .blue
+            message = "Normal conditions — your regular water routine is fine."
+        }
+
+        // --- Exercise overlay ---
+        if exerciseBoostActive {
+            message += " Because of your recent activity, aim for about 300 ml more water than your usual daily amount."
+        }
+
+        hydrationEmoji = emoji
+        hydrationColor = color
+        hydrationMessage = message
+    }
+
     private func observeExercise() {
         // Tie boosts to HealthManager publishers
         Task.detached { [weak self] in
@@ -117,6 +144,11 @@ final class HydroViewModel: ObservableObject {
     
     private func updateExerciseBoost() {
         exerciseBoostActive = HealthManager.shared.workoutActive || HealthManager.shared.elevatedHR
+
+        // Recompute message with new exercise state
+        recomputeHydrationMessage()
+
+        // Keep extra notifications for exercise + weather
         reschedule()
     }
     
@@ -126,4 +158,3 @@ final class HydroViewModel: ObservableObject {
         NotificationScheduler.scheduleDaily(plan: plan)
     }
 }
-
