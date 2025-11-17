@@ -44,13 +44,17 @@ struct SettingsView: View {
                     .padding(.vertical, 2)
             }
 
-            // MARK: - Permissions Section
+            // MARK: - Info & Permissions Section
             Section {
+                NavigationLink("Sources") {
+                    SourcesView()
+                }
+
                 NavigationLink("Permissions") {
                     PermissionsView()
                 }
-                .font(.footnote)
             }
+            .font(.footnote)
         }
         .navigationTitle("Settings")
     }
@@ -59,4 +63,3 @@ struct SettingsView: View {
 #Preview {
     SettingsView(vm: HydroViewModel())
 }
-

@@ -17,14 +17,6 @@ struct DashboardView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                     .foregroundStyle(.secondary)
-                
-                 
-                // Text(vm.city) //Text("\(vm.city), \(vm.country)")
-                 //   .font(.caption)
-                 //   .foregroundStyle(.secondary)
-                //    .multilineTextAlignment(.center)
-                  //  .lineLimit(1)
-                  //  .minimumScaleFactor(0.8)
 
                 HStack {
                     stat("Temp", value: vm.tempC.isNaN ? "—" : String(format: "%.0f℃", vm.tempC))
@@ -52,6 +44,14 @@ struct DashboardView: View {
                         .foregroundStyle(.blue)
                         .padding(.top, 2)
                 }
+
+                // 📚 Citation hint for App Review & users
+                Text("Hydration guidance is based on public health sources (Mayo Clinic, NHS). See Settings → Sources.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .multilineTextAlignment(.center)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.top, 4)
 
                 // 🔄 Update button
                 Button {
@@ -92,4 +92,3 @@ struct DashboardView: View {
 #Preview {
     DashboardView(vm: HydroViewModel())
 }
-
