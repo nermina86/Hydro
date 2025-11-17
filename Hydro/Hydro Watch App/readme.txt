@@ -25,7 +25,7 @@ Hydration/
 └── README.txt                           → Documentation
 
 
- Quick Hydration Coach
+ Quick Hydration Coach app
 * Shows your current water intake progress on the watch face complication.
 * Uses weather + heart rate + step count to suggest how much you need today (instead of generic “2 liters”).
 * Sends gentle haptics if you’re behind on hydration goals.

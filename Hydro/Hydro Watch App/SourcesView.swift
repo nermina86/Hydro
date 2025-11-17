@@ -22,11 +22,11 @@ struct SourcesView: View {
                 }
             }
 
-            // MARK: - Disclaimer
-            Section(header: Text("Disclaimer")) {
-                Text("Hydration suggestions in this app are for general wellness only and do not constitute medical advice. Consult your healthcare provider for personalized guidance.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+            // MARK: - Disclaimer (button)
+            Section(header: Text("Legal")) {
+                NavigationLink("Disclaimer") {
+                    DisclaimerView()   // 👈 Opens your full disclaimer screen
+                }
             }
         }
         .navigationTitle("Sources")

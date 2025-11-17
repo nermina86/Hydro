@@ -34,17 +34,8 @@ struct SettingsView: View {
                 Text("Reminders per day")
                     .font(.footnote)
             }
-
-            // MARK: - Info Section
-            Section {
-                Text("We’ll add extra reminder to drink water when it’s hot, or you exercise.")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .padding(.vertical, 2)
-            }
-
-            // MARK: - Info & Permissions Section
+            
+            // MARK: - Sources & Permissions Section
             Section {
                 NavigationLink("Sources") {
                     SourcesView()
@@ -53,8 +44,65 @@ struct SettingsView: View {
                 NavigationLink("Permissions") {
                     PermissionsView()
                 }
+                
+                NavigationLink("Disclaimer") {
+                    DisclaimerView()
+                }
+                
             }
             .font(.footnote)
+            
+            // MARK: - Notification window
+            Section {
+                HStack {
+                    Text("From")
+                        .font(.caption2)
+                    Spacer()
+                    Picker("From", selection: Binding(
+                        get: { vm.startHour },
+                        set: { vm.setStartHour($0) }
+                    )) {
+                        ForEach(6...20, id: \.self) { hour in
+                            Text(String(format: "%02d:00", hour))
+                                .tag(hour)
+                        }
+                    }
+                    .labelsHidden()
+                }
+
+                HStack {
+                    Text("To")
+                        .font(.caption2)
+                    Spacer()
+                    Picker("To", selection: Binding(
+                        get: { vm.endHour },
+                        set: { vm.setEndHour($0) }
+                    )) {
+                        ForEach(7...23, id: \.self) { hour in
+                            Text(String(format: "%02d:00", hour))
+                                .tag(hour)
+                        }
+                    }
+                    .labelsHidden()
+                }
+            } header: {
+                Text("Notification window")
+                    .font(.footnote)
+            } footer: {
+                Text("Hydration reminders will only be scheduled between these times.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+            }
+
+            // MARK: - Info Section
+            Section {
+                Text("We’ll add an extra reminder to drink water when it’s hot, or when exercise mode is detected.")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+                    .padding(.vertical, 2)
+            }
+
         }
         .navigationTitle("Settings")
     }

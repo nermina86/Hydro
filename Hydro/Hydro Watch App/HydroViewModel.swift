@@ -1,6 +1,7 @@
 //
 //  HydroViewModel.swift
 //
+
 import Foundation
 import CoreLocation
 import Combine
@@ -13,16 +14,32 @@ final class HydroViewModel: ObservableObject {
     @Published var tempC: Double = .nan
     @Published var humidity: Int = 0
     @Published var lastUpdated: Date?
-    @Published var reminderCountPerDay: Int = UserDefaults.standard.integer(forKey: "reminders") == 0 ? 6 : UserDefaults.standard.integer(forKey: "reminders")
-    
+
+    @Published var reminderCountPerDay: Int =
+        UserDefaults.standard.integer(forKey: "reminders") == 0
+        ? 6
+        : UserDefaults.standard.integer(forKey: "reminders")
+
     @Published var exerciseBoostActive: Bool = false
     @Published var weatherBoostActive: Bool = false
-    
+
+    // MARK: - Notification window (user configurable)
+    @Published var startHour: Int = {
+        let stored = UserDefaults.standard.integer(forKey: "startHour")
+        return stored == 0 ? 8 : stored   // default 08:00
+    }()
+
+    @Published var endHour: Int = {
+        let stored = UserDefaults.standard.integer(forKey: "endHour")
+        return stored == 0 ? 22 : stored  // default 22:00
+    }()
+
     // MARK: - Hydration feedback
     @Published var hydrationMessage: String = "—"
     @Published var hydrationEmoji: String = "🌤"
     @Published var hydrationColor: Color = .blue
-    
+
+    // MARK: - Lifecycle
     func onAppear() {
         Task {
             LocationManager.shared.request()
@@ -32,13 +49,30 @@ final class HydroViewModel: ObservableObject {
             observeExercise()
         }
     }
-    
+
+    // MARK: - Settings
     func setReminders(_ count: Int) {
         reminderCountPerDay = max(1, min(count, 12))
         UserDefaults.standard.set(reminderCountPerDay, forKey: "reminders")
         reschedule()
     }
-    
+
+    func setStartHour(_ hour: Int) {
+        // keep at least 1h gap and stay in 0...23
+        let clamped = max(0, min(hour, 22))
+        startHour = min(clamped, endHour - 1)
+        UserDefaults.standard.set(startHour, forKey: "startHour")
+        reschedule()
+    }
+
+    func setEndHour(_ hour: Int) {
+        let clamped = max(1, min(hour, 23))
+        endHour = max(clamped, startHour + 1)
+        UserDefaults.standard.set(endHour, forKey: "endHour")
+        reschedule()
+    }
+
+    // MARK: - Weather
     /// Fetches live weather if possible, or provides fake simulator data for debugging.
     func refreshWeatherIfPossible() async {
         #if targetEnvironment(simulator)
@@ -68,17 +102,17 @@ final class HydroViewModel: ObservableObject {
         }
         #endif
     }
-    
+
     /// Evaluates hydration need based on weather and updates boost flag + haptic.
     /// Actual message/emoji/color are built in `recomputeHydrationMessage()`.
     private func evaluateHydrationNeed() {
         // Capture the previous state before updating
         let previousBoost = weatherBoostActive
 
-        // --- Evaluate weather-based conditions only ---
+        // --- Weather-based conditions only ---
         if tempC > 26 {
             weatherBoostActive = true
-        } else if tempC > 20 && humidity > 60 {
+        } else if tempC > 24 && humidity > 60 {
             weatherBoostActive = true
         } else {
             weatherBoostActive = false
@@ -116,7 +150,7 @@ final class HydroViewModel: ObservableObject {
 
         // --- Exercise overlay ---
         if exerciseBoostActive {
-            message += "Because of your recent exercise activity, aim for 300ml additional water."
+            message += " Because of your recent exercise activity, aim for about 300 ml additional water today."
         }
 
         hydrationEmoji = emoji
@@ -124,24 +158,22 @@ final class HydroViewModel: ObservableObject {
         hydrationMessage = message
     }
 
+    // MARK: - Exercise observation
     private func observeExercise() {
-        // Tie boosts to HealthManager publishers
-        Task.detached { [weak self] in
+        // Tie boosts to HealthManager publishers on the main actor
+        Task { [weak self] in
             for await _ in HealthManager.shared.$workoutActive.values {
-                await MainActor.run {
-                    self?.updateExerciseBoost()
-                }
+                self?.updateExerciseBoost()
             }
         }
-        Task.detached { [weak self] in
+
+        Task { [weak self] in
             for await _ in HealthManager.shared.$elevatedHR.values {
-                await MainActor.run {
-                    self?.updateExerciseBoost()
-                }
+                self?.updateExerciseBoost()
             }
         }
     }
-    
+
     private func updateExerciseBoost() {
         exerciseBoostActive = HealthManager.shared.workoutActive || HealthManager.shared.elevatedHR
 
@@ -151,10 +183,16 @@ final class HydroViewModel: ObservableObject {
         // Keep extra notifications for exercise + weather
         reschedule()
     }
-    
+
+    // MARK: - Notification scheduling
     private func reschedule() {
         let bump = weatherBoostActive || exerciseBoostActive
-        let plan = ReminderStrategy.buildPlan(count: reminderCountPerDay, bump: bump)
+        let plan = ReminderStrategy.buildPlan(
+            count: reminderCountPerDay,
+            startHour: startHour,
+            endHour: endHour,
+            bump: bump
+        )
         NotificationScheduler.scheduleDaily(plan: plan)
     }
 }
